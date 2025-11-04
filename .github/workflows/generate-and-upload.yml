@@ -1,0 +1,51 @@
+name: Generate YAML and Upload to S3
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  generate-and-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install pyyaml
+
+      - name: Generate YAML file
+        run: |
+          python3 generate_yaml.py
+
+      - name: Create upload directory
+        run: |
+          mkdir -p upload_temp
+          cp notifications.yaml upload_temp/notifications.yaml
+
+      - name: Upload to S3
+        id: s3_upload
+        uses: shallwefootball/s3-upload-action@master
+        with:
+          aws_key_id: ${{ secrets.AWS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_bucket: altalt-dev
+          source_dir: 'upload_temp'
+          destination_dir: 'notifications'
+
+      - name: Output S3 location
+        run: |
+          echo "Uploaded to S3 with key: ${{ steps.s3_upload.outputs.object_key }}"
+          echo "Object locations: ${{ steps.s3_upload.outputs.object_locations }}"
+
