@@ -1,0 +1,19 @@
+- date: '2025-11-04'
+  en: |-
+    Hello!
+
+    I'm Sangwoo Ye from the Alt team.
+
+    We've received reports that on certain devices (M1 Pro), loading the model can take a long time.
+    We believe this is related to the M1's ANE, and we're currently working on a fix.
+    As a temporary workaround, please open Activity Monitor and force quit the ANECompilerService process 2–3 times; this should resolve the issue.
+    We'll resolve this soon so you can use it without inconvenience.
+  ko: |-
+    안녕하세요!
+
+    Alt 팀의 예상우입니다.
+
+    현재 특정 기기(M1 Pro)에서 모델을 로딩하는 데 오랜 시간이 걸린다는 이슈가 제보되었습니다.
+    이는 M1의 ANE와 관련된 문제로 예상되며, 현재 해결 중입니다.
+    우선 현재 가능한 방법은 Activity Monitor(활성 상태 보기)로 들어가셔서 ANECompilerService 프로세스를 2~3회 강제 종료하시면 해결됩니다.
+    향후 불편 없이 사용하실 수 있도록 해결하겠습니다.

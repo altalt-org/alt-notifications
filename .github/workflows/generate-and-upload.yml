@@ -29,23 +29,33 @@ jobs:
         run: |
           python3 generate_yaml.py
 
-      - name: Create upload directory
-        run: |
-          mkdir -p upload_temp
-          cp notifications.yaml upload_temp/notifications.yaml
-
-      - name: Upload to S3
-        id: s3_upload
-        uses: shallwefootball/s3-upload-action@master
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws_key_id: ${{ secrets.AWS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_bucket: altalt-dev
-          source_dir: 'upload_temp'
-          destination_dir: 'notifications'
+          aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Generate unique ID and upload to S3
+        id: s3_upload
+        run: |
+          # Generate a unique ID (similar to shortid)
+          UNIQUE_ID=$(date +%s%N | md5sum | head -c 8)
+          S3_KEY="notifications/${UNIQUE_ID}/notifications.yaml"
+          
+          # Upload with proper Content-Type including charset
+          aws s3 cp notifications.yaml s3://altalt-dev/${S3_KEY} \
+            --content-type "text/yaml; charset=utf-8" \
+            --acl public-read
+          
+          # Output the key and location
+          echo "object_key=${S3_KEY}" >> $GITHUB_OUTPUT
+          echo "object_location=https://altalt-dev.s3.ap-northeast-2.amazonaws.com/${S3_KEY}" >> $GITHUB_OUTPUT
+          
+          echo "✅ Uploaded to: https://altalt-dev.s3.ap-northeast-2.amazonaws.com/${S3_KEY}"
 
       - name: Output S3 location
         run: |
           echo "Uploaded to S3 with key: ${{ steps.s3_upload.outputs.object_key }}"
-          echo "Object locations: ${{ steps.s3_upload.outputs.object_locations }}"
+          echo "Object location: ${{ steps.s3_upload.outputs.object_location }}"
 
