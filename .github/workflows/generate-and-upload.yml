@@ -36,12 +36,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: Generate unique ID and upload to S3
+      - name: Upload to S3
         id: s3_upload
         run: |
-          # Generate a unique ID (similar to shortid)
-          UNIQUE_ID=$(date +%s%N | md5sum | head -c 8)
-          S3_KEY="notifications/${UNIQUE_ID}/notifications.yaml"
+          S3_KEY="notifications/notifications.yaml"
           
           # Upload with proper Content-Type including charset
           aws s3 cp notifications.yaml s3://altalt-dev/${S3_KEY} \
