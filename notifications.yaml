@@ -1,6 +1,5 @@
 - date: '2025-11-04'
-  language: en
-  content: |-
+  en: |-
     Hello!
 
     I'm Sangwoo Ye from the Alt team.
@@ -9,9 +8,7 @@
     We believe this is related to the M1's ANE, and we're currently working on a fix.
     As a temporary workaround, please open Activity Monitor and force quit the ANECompilerService process 2–3 times; this should resolve the issue.
     We'll resolve this soon so you can use it without inconvenience.
-- date: '2025-11-04'
-  language: ko
-  content: |-
+  ko: |-
     안녕하세요!
 
     Alt 팀의 예상우입니다.
@@ -21,8 +18,7 @@
     우선 현재 가능한 방법은 Activity Monitor(활성 상태 보기)로 들어가셔서 ANECompilerService 프로세스를 2~3회 강제 종료하시면 해결됩니다.
     향후 불편 없이 사용하실 수 있도록 해결하겠습니다.
 - date: '2025-11-03'
-  language: ko
-  content: |-
+  ko: |-
     테
     스
     트

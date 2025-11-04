@@ -91,8 +91,26 @@ def generate_yaml():
     
     all_files.sort(key=sort_key, reverse=True)
     
-    # YAML 형식으로 변환 (이미 LiteralStr로 변환되어 있음)
-    yaml_data = all_files
+    # 날짜별로 그룹화
+    date_groups = {}
+    for item in all_files:
+        date = item['date']
+        language = item['language']
+        content = item['content']
+        
+        if date not in date_groups:
+            date_groups[date] = {}
+        
+        date_groups[date][language] = content
+    
+    # YAML 형식으로 변환: date -> language -> content
+    yaml_data = []
+    for date in sorted(date_groups.keys(), key=lambda d: datetime.strptime(d, '%Y-%m-%d'), reverse=True):
+        date_entry = {'date': date}
+        # 언어별로 content 추가
+        for language in sorted(date_groups[date].keys()):
+            date_entry[language] = date_groups[date][language]
+        yaml_data.append(date_entry)
     
     # YAML 파일로 저장
     output_file = base_dir / 'notifications.yaml'
@@ -101,7 +119,7 @@ def generate_yaml():
                   sort_keys=False, width=1000)
     
     print(f"✅ YAML 파일이 생성되었습니다: {output_file}")
-    print(f"   총 {len(yaml_data)}개의 항목이 포함되었습니다.")
+    print(f"   총 {len(yaml_data)}개의 날짜 항목이 포함되었습니다.")
 
 
 if __name__ == '__main__':
